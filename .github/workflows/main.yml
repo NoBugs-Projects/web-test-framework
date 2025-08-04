@@ -36,8 +36,8 @@ jobs:
     needs: [ automation-api, automation-ui, automation-ui-firefox ]
     if: always()
     uses: ./.github/workflows/report.yml
-#    with:
-#      parent_run_number: ${{ github.run_number }}
+    with:
+      parent_run_number: ${{ github.run_number }}
 
   # Необходим мануальный апрув, чтобы задеплоить бэкенд и фронтенд на прод
   # Нужно настроить prod environment. Инструкция: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#creating-an-environment
