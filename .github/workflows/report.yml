@@ -38,19 +38,23 @@ jobs:
         run: |
           mkdir -p reports
           ls -la reports/
-          chmod 755 reports/
 
       - name: Build Swagger coverage report
         run: sudo cp allure-results/swagger-coverage-report.html reports/${{ github.run_number }}/
 
       - name: Copy index.html to root
         run: |
+          pwd
+          ls -la .github/report/
           ls -la reports/
           if [ -f .github/report/index.html ]; then
+            echo "Found index.html, copying..."
             cp .github/report/index.html reports/
+            echo "Copy successful"
           else
             echo "Creating default index.html file"
             echo '<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Reports are available in the latest directory.</p></body></html>' > reports/index.html
+            echo "Default file created"
           fi
 
       - name: Copy logo to root
