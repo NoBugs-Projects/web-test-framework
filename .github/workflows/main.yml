@@ -32,6 +32,14 @@ jobs:
       package: ui
       browser: firefox
 
+  print-run-number:
+    if: always()
+    needs: [ automation-api, automation-ui, automation-ui-firefox ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print run number
+        run: echo "RUN NUMBER: ${{ github.run_number }}"
+
   report:
     needs: [ automation-api, automation-ui, automation-ui-firefox ]
     if: always()
