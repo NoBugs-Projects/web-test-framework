@@ -3,6 +3,7 @@ package com.teamcity.ui;
 import com.teamcity.api.models.BuildType;
 import com.teamcity.api.requests.checked.CheckedBase;
 import com.teamcity.api.spec.Specifications;
+import com.teamcity.ui.annotations.UserSession;
 import com.teamcity.ui.pages.admin.CreateBuildTypePage;
 import com.teamcity.ui.pages.admin.EditBuildTypePage;
 import io.qameta.allure.Feature;
@@ -15,6 +16,7 @@ import static com.teamcity.api.enums.Endpoint.PROJECTS;
 public class CreateBuildTypeTest extends BaseUiTest {
 
     @Test(description = "User should be able to create build type", groups = {"Regression"})
+    @UserSession
     public void userCreatesBuildTypeTest(String ignoredBrowser) {
         checkedSuperUser.getRequest(PROJECTS).create(testData.get().getNewProjectDescription());
         loginAs(testData.get().getUser());

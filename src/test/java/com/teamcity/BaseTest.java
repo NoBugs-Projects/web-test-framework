@@ -18,11 +18,12 @@ import org.testng.annotations.BeforeMethod;
 import static com.teamcity.api.generators.TestDataGenerator.generate;
 import static io.qameta.allure.util.ResultsUtils.TAG_LABEL_NAME;
 
+
 public abstract class BaseTest implements IHookable {
 
     protected final CheckedRequests checkedSuperUser = new CheckedRequests(Specifications.getSpec().superUserSpec());
     protected final UncheckedRequests uncheckedSuperUser = new UncheckedRequests(Specifications.getSpec().superUserSpec());
-    protected final ThreadLocal<TestData> testData = new ThreadLocal<>();
+    public ThreadLocal<TestData> testData = new ThreadLocal<>();
     protected SoftAssertions softy;
 
     @BeforeMethod(alwaysRun = true)

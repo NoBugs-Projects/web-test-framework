@@ -34,7 +34,7 @@ jobs:
         run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
 
       - name: Copy index.html to root
-        run: cp .github/index.html allure-history/
+        run: cp .github/report/index.html allure-history/
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
