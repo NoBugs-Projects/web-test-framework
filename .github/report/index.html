@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Test Framework - Reports Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333333;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(8, 252, 4, 0.15);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            border: 2px solid #08fc04;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #006400 0%, #08fc04 100%);
+            color: #000000;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,30 Q30,20 40,30 Q50,40 60,30 Q70,20 80,30 L80,70 Q70,80 60,70 Q50,60 40,70 Q30,80 20,70 Z" fill="none" stroke="%23000000" stroke-width="3"/><line x1="15" y1="85" x2="85" y2="15" stroke="%23000000" stroke-width="4"/></svg>') no-repeat center;
+            background-size: contain;
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-family: 'Unbounded', cursive;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-family: 'Jost', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+            background: #ffffff;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .report-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(8, 252, 4, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .report-card:hover::before {
+            left: 100%;
+        }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(8, 252, 4, 0.2);
+            border-color: #08fc04;
+        }
+
+        .report-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #006400 0%, #08fc04 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #000000;
+            position: relative;
+            z-index: 1;
+        }
+
+        .report-icon.pink {
+            background: linear-gradient(135deg, #8b0000 0%, #fc1589 100%);
+        }
+
+        .report-card h3 {
+            font-family: 'Unbounded', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333333;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .report-card p {
+            font-family: 'Jost', sans-serif;
+            color: #666666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #006400 0%, #08fc04 100%);
+            color: #000000;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Unbounded', cursive;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn.pink {
+            background: linear-gradient(135deg, #8b0000 0%, #fc1589 100%);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(8, 252, 4, 0.4);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666666;
+            border-top: 1px solid #08fc04;
+            font-family: 'Jost', sans-serif;
+        }
+
+        .footer a {
+            color: #08fc04;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: #fc1589;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .reports-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .report-card {
+                padding: 20px;
+            }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: #08fc04;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(8, 252, 4, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(8, 252, 4, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(8, 252, 4, 0);
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: #000000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #08fc04;
+            margin-right: 20px;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="logo_icon.png" alt="NoBugs Logo">
+                </div>
+                <h1>Web Test Framework</h1>
+            </div>
+            <p>Comprehensive Test Reports Dashboard</p>
+        </div>
+
+        <div class="content">
+            <div class="reports-grid">
+                <div class="report-card">
+                    <div class="report-icon">📊</div>
+                    <h3>Allure Test Report</h3>
+                    <p>Comprehensive test execution results with detailed analytics, screenshots, and performance metrics.</p>
+                    <a href="#" id="allure-link" class="btn" target="_blank">
+                        <span class="status-indicator"></span>
+                        View Allure Report
+                    </a>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-icon pink">🔍</div>
+                    <h3>Swagger Coverage Report</h3>
+                    <p>API endpoint coverage analysis showing which endpoints have been tested and their current status.</p>
+                    <a href="#" id="swagger-link" class="btn pink" target="_blank">
+                        <span class="status-indicator"></span>
+                        View Swagger Coverage
+                    </a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="color: #666666; font-size: 0.9rem;">
+                    Reports are automatically generated and updated after each test run.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                Built with <strong style="color: #08fc04;">NoBugs</strong> ❤️ for quality assurance
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Function to get the latest run number from GitHub API
+        async function getLatestRunNumber() {
+            try {
+                // Extract repository info from current URL
+                const currentUrl = window.location.href;
+                const githubPagesMatch = currentUrl.match(/https:\/\/([^.]+)\.github\.io\/([^\/]+)/);
+                
+                if (githubPagesMatch) {
+                    const username = githubPagesMatch[1];
+                    const repoName = githubPagesMatch[2];
+                    
+                    // Try to fetch the latest run number from GitHub API
+                    const apiUrl = `https://api.github.com/repos/${username}/${repoName}/actions/runs?per_page=1&status=completed`;
+                    
+                    const response = await fetch(apiUrl);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.workflow_runs && data.workflow_runs.length > 0) {
+                            return data.workflow_runs[0].run_number;
+                        }
+                    }
+                }
+                
+                // Fallback: try to get from URL path or default to latest
+                const pathMatch = currentUrl.match(/\/(\d+)\/?$/);
+                if (pathMatch) {
+                    return pathMatch[1];
+                }
+                
+                // If all else fails, try to find the highest number in the directory
+                return await findLatestRunFromDirectory();
+                
+            } catch (error) {
+                console.warn('Could not fetch latest run number:', error);
+                return await findLatestRunFromDirectory();
+            }
+        }
+
+        // Function to find the latest run number by checking directory structure
+        async function findLatestRunFromDirectory() {
+            try {
+                // Try to fetch the directory listing from GitHub Pages
+                const response = await fetch(window.location.origin + '/');
+                const text = await response.text();
+                
+                // Look for directory links that are numbers
+                const matches = text.match(/href="(\d+)\/"/g);
+                if (matches) {
+                    const numbers = matches.map(match => parseInt(match.match(/(\d+)/)[1]));
+                    return Math.max(...numbers);
+                }
+            } catch (error) {
+                console.warn('Could not find latest run from directory:', error);
+            }
+            
+            // Default fallback
+            return 'latest';
+        }
+
+        // Function to build the correct URLs
+        async function buildReportUrls() {
+            const runNumber = await getLatestRunNumber();
+            const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, '');
+            
+            // Build URLs based on the repository structure
+            const allureUrl = `${baseUrl}/${runNumber}/index.html`;
+            const swaggerUrl = `${baseUrl}/${runNumber}/swagger-coverage/swagger-coverage-report.html`;
+            
+            // Update the links
+            const allureLink = document.getElementById('allure-link');
+            const swaggerLink = document.getElementById('swagger-link');
+            
+            if (allureLink) {
+                allureLink.href = allureUrl;
+                allureLink.addEventListener('click', function() {
+                    console.log('Allure Report accessed for run:', runNumber);
+                });
+            }
+            
+            if (swaggerLink) {
+                swaggerLink.href = swaggerUrl;
+                swaggerLink.addEventListener('click', function() {
+                    console.log('Swagger Coverage accessed for run:', runNumber);
+                });
+            }
+            
+            // Update the status indicator text to show the run number
+            const statusText = document.querySelector('.header p');
+            if (statusText) {
+                statusText.textContent = `Comprehensive Test Reports Dashboard - Run #${runNumber}`;
+            }
+        }
+
+        // Add interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Build the dynamic URLs
+            buildReportUrls();
+            
+            const cards = document.querySelectorAll('.report-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
