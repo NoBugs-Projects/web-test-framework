@@ -43,7 +43,7 @@ jobs:
             echo "Run number injected into dashboard"
           else
             echo "Creating default dashboard"
-            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ inputs.parent_run_number }}</p></body></html>" > allure-history/index.html
+            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" > allure-history/index.html
           fi
 
       - name: Publish test report
