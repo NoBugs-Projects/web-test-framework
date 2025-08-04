@@ -16,7 +16,6 @@ import static com.teamcity.api.enums.Endpoint.PROJECTS;
 public class CreateBuildTypeTest extends BaseUiTest {
 
     @Test(description = "User should be able to create build type", groups = {"Regression"})
-    @UserSession
     public void userCreatesBuildTypeTest(String ignoredBrowser) {
         checkedSuperUser.getRequest(PROJECTS).create(testData.get().getNewProjectDescription());
         loginAs(testData.get().getUser());

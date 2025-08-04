@@ -6,6 +6,10 @@ jobs:
   allure-report:
     runs-on: ubuntu-latest
     steps:
+      # Checkout the repository to get access to the index.html file
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       # Выкачиваем все артефакты в одну директорию для формирования одного общего репорта
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -27,18 +31,32 @@ jobs:
         uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
-          allure_history: allure-history
+          allure_history: reports
           allure_results: allure-results
 
       - name: Build Swagger coverage report
-        run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
+        run: sudo cp allure-results/swagger-coverage-report.html reports/${{ github.run_number }}/
 
       - name: Copy index.html to root
-        run: cp .github/report/index.html allure-history/
+        run: |
+          if [ -f .github/report/index.html ]; then
+            cp .github/report/index.html reports/
+          else
+            echo "Creating default index.html file"
+            echo '<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Reports are available in the latest directory.</p></body></html>' > reports/index.html
+          fi
+
+      - name: Copy logo to root
+        run: |
+          if [ -f .github/report/logo_icon.png ]; then
+            cp .github/report/logo_icon.png reports/
+          else
+            echo "Logo file not found, skipping copy"
+          fi
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: reports
