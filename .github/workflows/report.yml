@@ -34,11 +34,18 @@ jobs:
           allure_history: reports
           allure_results: allure-results
 
+      - name: Ensure reports directory exists
+        run: |
+          mkdir -p reports
+          ls -la reports/
+          chmod 755 reports/
+
       - name: Build Swagger coverage report
         run: sudo cp allure-results/swagger-coverage-report.html reports/${{ github.run_number }}/
 
       - name: Copy index.html to root
         run: |
+          ls -la reports/
           if [ -f .github/report/index.html ]; then
             cp .github/report/index.html reports/
           else
