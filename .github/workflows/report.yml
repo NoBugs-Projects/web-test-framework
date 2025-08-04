@@ -1,9 +1,14 @@
-name: Allure report
+name: Report
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      parent_run_number:
+        required: true
+        type: number
 
 jobs:
-  allure-report:
+  report:
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository to get access to the index.html file
@@ -35,27 +40,22 @@ jobs:
           allure_results: allure-results
 
       - name: Build Swagger coverage report
-        run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
+        run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ inputs.parent_run_number }}/
 
-      - name: Copy dashboard files
+      - name: Inject run number into dashboard
         run: |
+          mkdir -p allure-history
           if [ -f .github/report/index.html ]; then
-            sudo cp .github/report/index.html allure-history/
-            echo "Dashboard copied successfully"
+            sed "s/__RUN_NUMBER__/${{ inputs.parent_run_number }}/g" .github/report/index.html > allure-history/index.html
+            echo "Run number injected into dashboard"
           else
             echo "Creating default dashboard"
-            sudo sh -c 'echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Reports are available in the latest directory.</p></body></html>" > allure-history/index.html'
-          fi
-          
-          if [ -f .github/report/logo_icon.png ]; then
-            sudo cp .github/report/logo_icon.png allure-history/
-            echo "Logo copied successfully"
-          else
-            echo "Logo file not found, skipping"
+            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ inputs.parent_run_number }}</p></body></html>" > allure-history/index.html
           fi
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
+        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
