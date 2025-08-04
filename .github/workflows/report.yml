@@ -31,38 +31,27 @@ jobs:
         uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
-          allure_history: reports
+          allure_history: allure-history
           allure_results: allure-results
 
-      - name: Ensure reports directory exists
-        run: |
-          mkdir -p reports
-          ls -la reports/
-
       - name: Build Swagger coverage report
-        run: sudo cp allure-results/swagger-coverage-report.html reports/${{ github.run_number }}/
+        run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
 
-      - name: Copy index.html to root
+      - name: Copy dashboard files
         run: |
-          pwd
-          ls -la .github/report/
-          ls -la reports/
           if [ -f .github/report/index.html ]; then
-            echo "Found index.html, copying..."
-            cp .github/report/index.html reports/
-            echo "Copy successful"
+            sudo cp .github/report/index.html allure-history/
+            echo "Dashboard copied successfully"
           else
-            echo "Creating default index.html file"
-            echo '<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Reports are available in the latest directory.</p></body></html>' > reports/index.html
-            echo "Default file created"
+            echo "Creating default dashboard"
+            sudo sh -c 'echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Reports are available in the latest directory.</p></body></html>" > allure-history/index.html'
           fi
-
-      - name: Copy logo to root
-        run: |
+          
           if [ -f .github/report/logo_icon.png ]; then
-            cp .github/report/logo_icon.png reports/
+            sudo cp .github/report/logo_icon.png allure-history/
+            echo "Logo copied successfully"
           else
-            echo "Logo file not found, skipping copy"
+            echo "Logo file not found, skipping"
           fi
 
       - name: Publish test report
@@ -70,4 +59,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: reports
+          publish_dir: allure-history
