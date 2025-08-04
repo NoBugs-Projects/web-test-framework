@@ -1,12 +1,5 @@
 name: Report
 
-on:
-  workflow_call:
-    inputs:
-      parent_run_number:
-        required: true
-        type: number
-
 jobs:
   report:
     runs-on: ubuntu-latest
@@ -40,13 +33,13 @@ jobs:
           allure_results: allure-results
 
       - name: Build Swagger coverage report
-        run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ inputs.parent_run_number }}/
+        run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
 
       - name: Inject run number into dashboard
         run: |
           mkdir -p allure-history
           if [ -f .github/report/index.html ]; then
-            sed "s/__RUN_NUMBER__/${{ inputs.parent_run_number }}/g" .github/report/index.html > allure-history/index.html
+            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history/index.html
             echo "Run number injected into dashboard"
           else
             echo "Creating default dashboard"
