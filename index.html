@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Web Test Framework - Reports Dashboard</title>
-    <!-- шрифты и стили — как у тебя, без изменений -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="container">
@@ -57,13 +57,13 @@
 </div>
 
 <script>
-    const injectedRunNumber = "25"; // будет заменён на номер при публикации
+    const injectedRunNumber = "26"; // будет заменён на номер при публикации
 
     function buildReportUrls() {
       const runNumber = injectedRunNumber;
       const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, '');
 
-      const allureUrl = `${baseUrl}/${runNumber}/index.html`;
+      const allureUrl = `${baseUrl}/${runNumber}/allure-report.html`;
       const swaggerUrl = `${baseUrl}/${runNumber}/swagger-coverage-report.html`;
 
       document.getElementById('allure-link').href = allureUrl;
