@@ -46,15 +46,29 @@ jobs:
             cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/ || echo "Failed to copy swagger report"
           fi
 
+      - name: Rename Allure report
+        run: |
+          if [ -f allure-history/index.html ]; then
+            mv allure-history/index.html allure-history/allure-report.html || echo "Failed to rename index.html to allure-report.html - permission issue"
+            echo "Allure report renamed to allure-report.html"
+          else
+            echo "No index.html found in allure-history directory"
+          fi
+
       - name: Inject run number into dashboard
         run: |
           mkdir -p allure-history
+          # Copy logo to allure-history directory
+          if [ -f logo_icon.png ]; then
+            cp logo_icon.png allure-history/ || echo "Failed to copy logo - permission issue"
+          fi
+          # Create index.html with injected run number
           if [ -f .github/report/index.html ]; then
-            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history/index.html || echo "Failed to create dashboard from template"
-            echo "Run number injected into dashboard"
+            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history/index.html || echo "Failed to create dashboard from template - permission issue"
+            echo "Run number injected into dashboard from template"
           else
             echo "Creating default dashboard"
-            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" > allure-history/index.html || echo "Failed to create default dashboard"
+            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" > allure-history/index.html || echo "Failed to create default dashboard - permission issue"
           fi
 
       - name: Publish test report
