@@ -43,16 +43,17 @@ jobs:
         run: |
           if [ -f allure-results/swagger-coverage-report.html ]; then
             mkdir -p allure-history/${{ github.run_number }}
-            cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/ || echo "Failed to copy swagger report"
+            sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/ || echo "Failed to copy swagger report"
           fi
 
-      - name: Rename Allure report
+      - name: Copy Allure report to managed directory
         run: |
+          mkdir -p allure-history/${{ github.run_number }}
           if [ -f allure-history/index.html ]; then
-            mv allure-history/${{ github.run_number }}/index.html allure-history/${{ github.run_number }}/allure-report.html || echo "Failed to rename index.html to allure-report.html - permission issue"
-            echo "Allure report renamed to allure-report.html"
+            sudo cp allure-history/index.html allure-history/${{ github.run_number }}/allure-report.html || echo "Failed to copy Allure report to managed directory"
+            echo "Allure report copied to managed directory"
           else
-            echo "No index.html found in allure-history directory"
+            echo "No Allure report found to copy"
           fi
 
       - name: Inject run number into dashboard
@@ -60,20 +61,20 @@ jobs:
           mkdir -p allure-history
           # Copy logo to allure-history directory
           if [ -f logo_icon.png ]; then
-            cp logo_icon.png allure-history/ || echo "Failed to copy logo - permission issue"
+            sudo cp logo_icon.png allure-history/ || echo "Failed to copy logo"
           fi
           # Create index.html with injected run number
           if [ -f .github/report/index.html ]; then
-            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history//${{ github.run_number }}/index.html || echo "Failed to create dashboard from template - permission issue"
+            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html | sudo tee allure-history/index.html > /dev/null || echo "Failed to create dashboard from template"
             echo "Run number injected into dashboard from template"
           else
             echo "Creating default dashboard"
-            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" > allure-history/index.html || echo "Failed to create default dashboard - permission issue"
+            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" | sudo tee allure-history/index.html > /dev/null || echo "Failed to create default dashboard"
           fi
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
-        #        if: always()
+#        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
