@@ -49,7 +49,7 @@ jobs:
       - name: Rename Allure report
         run: |
           if [ -f allure-history/index.html ]; then
-            mv allure-history/index.html allure-history/allure-report.html || echo "Failed to rename index.html to allure-report.html - permission issue"
+            mv allure-history/${{ github.run_number }}/index.html allure-history/${{ github.run_number }}/allure-report.html || echo "Failed to rename index.html to allure-report.html - permission issue"
             echo "Allure report renamed to allure-report.html"
           else
             echo "No index.html found in allure-history directory"
@@ -64,7 +64,7 @@ jobs:
           fi
           # Create index.html with injected run number
           if [ -f .github/report/index.html ]; then
-            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history/index.html || echo "Failed to create dashboard from template - permission issue"
+            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history//${{ github.run_number }}/index.html || echo "Failed to create dashboard from template - permission issue"
             echo "Run number injected into dashboard from template"
           else
             echo "Creating default dashboard"
@@ -73,7 +73,7 @@ jobs:
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
-#        if: always()
+        #        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
