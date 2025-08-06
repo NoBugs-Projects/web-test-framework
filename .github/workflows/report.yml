@@ -1,5 +1,12 @@
 name: Report
 
+on:
+  workflow_call:
+    inputs:
+      parent_run_number:
+        required: false
+        type: string
+
 jobs:
   report:
     runs-on: ubuntu-latest
