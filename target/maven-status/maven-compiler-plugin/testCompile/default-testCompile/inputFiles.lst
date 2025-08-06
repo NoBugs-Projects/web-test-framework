@@ -1,0 +1,16 @@
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/BaseTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/api/BaseApiTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/api/BuildTypeTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/api/ProjectTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/api/SearchTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/api/SetupAgentTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/api/StartBuildTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/common/AnnotationTransformerListener.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/common/RetryAnalyzer.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/common/WireMock.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/ui/BaseUiTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/ui/CreateBuildTypeTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/ui/CreateProjectTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/ui/SetupServerTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/ui/StartBuildTest.java
+/Users/alex.pshe/IdeaProjects/web-test-framework/src/test/java/com/teamcity/ui/listeners/UserSessionListener.java

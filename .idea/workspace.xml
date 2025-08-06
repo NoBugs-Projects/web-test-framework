@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8acfc1cc-8eb8-4519-8d0e-3d285c15d494" name="Changes" comment="Add Report" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="gh-pages" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;nobugs-me&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/NoBugs-Projects/web-test-framework.git&quot;,
+    &quot;accountId&quot;: &quot;90420edb-1f69-4616-84c7-3ff4d7dbf2ac&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="30ppRH3873dEyL4S6jyYGgF8yqS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "TestNG.CreateBuildTypeTest.userCreatesBuildTypeTest.executor": "Run",
+    "TestNG.ProjectTest.userCreatesProjectTest.executor": "Run",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/alex.pshe/IdeaProjects/web-test-framework/.github/report"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.github/report" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/web-test-framework-python/tests/api" />
+      <recent name="$PROJECT_DIR$/.github/report" />
+      <recent name="$PROJECT_DIR$/.github" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.teamcity.ui" />
+    </key>
+  </component>
+  <component name="RunManager" selected="TestNG.ProjectTest.userCreatesProjectTest">
+    <configuration name="CreateBuildTypeTest.userCreatesBuildTypeTest" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="teamcity-testing-framework" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.teamcity.ui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.teamcity.ui" />
+      <option name="MAIN_CLASS_NAME" value="com.teamcity.ui.CreateBuildTypeTest" />
+      <option name="METHOD_NAME" value="userCreatesBuildTypeTest" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProjectTest.userCreatesProjectTest" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="teamcity-testing-framework" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.teamcity.api.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.teamcity.api" />
+      <option name="MAIN_CLASS_NAME" value="com.teamcity.api.ProjectTest" />
+      <option name="METHOD_NAME" value="userCreatesProjectTest" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="TestNG.ProjectTest.userCreatesProjectTest" />
+        <item itemvalue="TestNG.CreateBuildTypeTest.userCreatesBuildTypeTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8acfc1cc-8eb8-4519-8d0e-3d285c15d494" name="Changes" comment="" />
+      <created>1754334358632</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1754334358632</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Add tests">
+      <option name="closed" value="true" />
+      <created>1754334426033</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1754334426033</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add tests">
+      <option name="closed" value="true" />
+      <created>1754334505980</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1754334505980</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add gh-pages">
+      <option name="closed" value="true" />
+      <created>1754334564345</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1754334564345</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add GitHub Actions">
+      <option name="closed" value="true" />
+      <created>1754334704292</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1754334704292</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add Maven">
+      <option name="closed" value="true" />
+      <created>1754335099616</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1754335099616</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754337002511</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1754337002511</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754338642664</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1754338642664</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754341178461</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1754341178461</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754342008933</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1754342008933</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754342991103</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1754342991103</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754344247724</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1754344247724</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754346394681</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1754346394681</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754347733039</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1754347733039</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754348913384</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1754348913384</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754349600635</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1754349600635</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Add Report">
+      <option name="closed" value="true" />
+      <created>1754349893590</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1754349893590</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add tests" />
+    <MESSAGE value="Add gh-pages" />
+    <MESSAGE value="Add GitHub Actions" />
+    <MESSAGE value="Add Maven" />
+    <MESSAGE value="Add Report" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Report" />
+  </component>
+</project>
