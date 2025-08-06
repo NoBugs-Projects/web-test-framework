@@ -41,20 +41,20 @@ jobs:
 
       - name: Build Swagger coverage report
         run: |
-          mkdir -p allure-history/${{ github.run_number }}
           if [ -f allure-results/swagger-coverage-report.html ]; then
-            cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
+            mkdir -p allure-history/${{ github.run_number }}
+            cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/ || echo "Failed to copy swagger report"
           fi
 
       - name: Inject run number into dashboard
         run: |
           mkdir -p allure-history
           if [ -f .github/report/index.html ]; then
-            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history/index.html
+            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history/index.html || echo "Failed to create dashboard from template"
             echo "Run number injected into dashboard"
           else
             echo "Creating default dashboard"
-            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" > allure-history/index.html
+            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" > allure-history/index.html || echo "Failed to create default dashboard"
           fi
 
       - name: Publish test report
