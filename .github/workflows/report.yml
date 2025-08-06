@@ -60,8 +60,8 @@ jobs:
         run: |
           mkdir -p allure-history
           # Copy logo to allure-history directory
-          if [ -f logo_icon.png ]; then
-            sudo cp logo_icon.png allure-history/${{ github.run_number }}/ || echo "Failed to copy logo"
+          if [ -f .github/report/logo_icon.png ]; then
+            sudo cp .github/report/logo_icon.png allure-history/${{ github.run_number }}/ || echo "Failed to copy logo"
           fi
           # Copy any CSS files from .github/report/
           if [ -f .github/report/*.css ]; then
@@ -69,7 +69,7 @@ jobs:
           fi
           # Create index.html with injected run number
           if [ -f .github/report/index.html ]; then
-            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html | sudo tee allure-history/${{ github.run_number }}/index.html > /dev/null || echo "Failed to create dashboard from template"
+            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/${{ github.run_number }}/index.html | sudo tee allure-history/${{ github.run_number }}/index.html > /dev/null || echo "Failed to create dashboard from template"
             echo "Run number injected into dashboard from template"
           else
             echo "Creating default dashboard"
@@ -78,8 +78,8 @@ jobs:
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
-#        if: always()
+        #        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history/${{ github.run_number }}
+          publish_dir: allure-history/${{ github.run_number }}/
