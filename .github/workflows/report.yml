@@ -40,17 +40,26 @@ jobs:
           allure_results: allure-results
 
       - name: Build Swagger coverage report
-        run: sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
+        run: |
+          mkdir -p allure-history/${{ github.run_number }}
+          chmod 755 allure-history/${{ github.run_number }}
+          if [ -f allure-results/swagger-coverage-report.html ]; then
+            cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/
+            chmod 644 allure-history/${{ github.run_number }}/swagger-coverage-report.html
+          fi
 
       - name: Inject run number into dashboard
         run: |
           mkdir -p allure-history
+          chmod 755 allure-history
           if [ -f .github/report/index.html ]; then
             sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html > allure-history/index.html
+            chmod 644 allure-history/index.html
             echo "Run number injected into dashboard"
           else
             echo "Creating default dashboard"
             echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" > allure-history/index.html
+            chmod 644 allure-history/index.html
           fi
 
       - name: Publish test report
