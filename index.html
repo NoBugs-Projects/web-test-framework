@@ -1,2 +1,81 @@
-<!DOCTYPE html><meta charset="utf-8"><meta http-equiv="refresh" content="0; URL=https://NoBugs-Projects.github.io/web-test-framework/24/index.html">
-<meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Web Test Framework - Reports Dashboard</title>
+    <!-- шрифты и стили — как у тебя, без изменений -->
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="logo_icon.png" alt="NoBugs Logo" />
+            </div>
+            <h1>Web Test Framework</h1>
+        </div>
+        <p>Comprehensive Test Reports Dashboard</p>
+    </div>
+
+    <div class="content">
+        <div class="reports-grid">
+            <div class="report-card">
+                <div class="report-icon">📊</div>
+                <h3>Allure Test Report</h3>
+                <p>Comprehensive test execution results with detailed analytics, screenshots, and performance metrics.</p>
+                <a href="#" id="allure-link" class="btn" target="_blank">
+                    <span class="status-indicator"></span>
+                    View Allure Report
+                </a>
+            </div>
+
+            <div class="report-card">
+                <div class="report-icon pink">🔍</div>
+                <h3>Swagger Coverage Report</h3>
+                <p>API endpoint coverage analysis showing which endpoints have been tested and their current status.</p>
+                <a href="#" id="swagger-link" class="btn pink" target="_blank">
+                    <span class="status-indicator"></span>
+                    View Swagger Coverage
+                </a>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <p style="color: #666666; font-size: 0.9rem;">
+                Reports are automatically generated and updated after each test run.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>
+            Built with <strong style="color: #08fc04;">NoBugs</strong> ❤️ for quality assurance
+        </p>
+    </div>
+</div>
+
+<script>
+    const injectedRunNumber = "25"; // будет заменён на номер при публикации
+
+    function buildReportUrls() {
+      const runNumber = injectedRunNumber;
+      const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, '');
+
+      const allureUrl = `${baseUrl}/${runNumber}/index.html`;
+      const swaggerUrl = `${baseUrl}/${runNumber}/swagger-coverage-report.html`;
+
+      document.getElementById('allure-link').href = allureUrl;
+      document.getElementById('swagger-link').href = swaggerUrl;
+
+      const statusText = document.querySelector('.header p');
+      if (statusText) {
+        statusText.textContent = `Comprehensive Test Reports Dashboard - Run #${runNumber}`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', buildReportUrls);
+</script>
+</body>
+</html>
