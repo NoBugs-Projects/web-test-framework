@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Web Test Framework - Reports Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="report_styles.css">
 </head>
 <body>
 <div class="container">
@@ -61,10 +61,12 @@
 
     function buildReportUrls() {
       const runNumber = injectedRunNumber;
-      const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, '');
+      // Get the base URL without the current page name
+      const currentPath = window.location.pathname;
+      const baseUrl = window.location.origin + currentPath.substring(0, currentPath.lastIndexOf('/'));
 
-      const allureUrl = `${baseUrl}/${runNumber}/allure-report.html`;
-      const swaggerUrl = `${baseUrl}/${runNumber}/swagger-coverage-report.html`;
+      const allureUrl = `${baseUrl}/allure-report.html`;
+      const swaggerUrl = `${baseUrl}/swagger-coverage-report.html`;
 
       document.getElementById('allure-link').href = allureUrl;
       document.getElementById('swagger-link').href = swaggerUrl;
