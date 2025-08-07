@@ -36,11 +36,13 @@ jobs:
         uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
-          allure_history: allure-history
+          allure_history: allure-history/${{ github.run_number }}
           allure_results: allure-results
 
       - name: Build Swagger coverage report
         run: |
+          ls -R allure-history
+          ls -R allure-history/${{ github.run_number }}
           if [ -f allure-results/swagger-coverage-report.html ]; then
             mkdir -p allure-history/${{ github.run_number }}
             sudo cp allure-results/swagger-coverage-report.html allure-history/${{ github.run_number }}/ || echo "Failed to copy swagger report"
