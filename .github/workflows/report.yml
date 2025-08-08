@@ -56,7 +56,7 @@ jobs:
             echo "No Allure report found to copy"
           fi
 
-      - name: Inject run number into dashboard
+      - name: Extract metrics and generate dashboard
         run: |
           # Copy logo to allure-history directory
           if [ -f .github/report/logo_icon.png ]; then
@@ -66,15 +66,11 @@ jobs:
           if [ -f .github/report/*.css ]; then
             sudo cp .github/report/*.css allure-history/${{ github.run_number }}/ || echo "Failed to copy CSS files"
           fi
-          # Create index.html with injected run number
-          if [ -f .github/report/index.html ]; then
-            sed "s/__RUN_NUMBER__/${{ github.run_number }}/g" .github/report/index.html | sudo tee allure-history/${{ github.run_number }}/index.html > /dev/null || echo "Failed to create dashboard from template"
-            echo "Run number injected into dashboard from template"
-            cat allure-history/${{ github.run_number }}/index.html
-          else
-            echo "Creating default dashboard"
-            echo "<!DOCTYPE html><html><head><title>Web Test Framework</title></head><body><h1>Test Reports</h1><p>Run ${{ github.run_number }}</p></body></html>" | sudo tee allure-history/index.html > /dev/null || echo "Failed to create default dashboard"
-          fi
+          # Execute extract-metrics.sh script
+          chmod +x .github/scripts/extract-metrics.sh
+          .github/scripts/extract-metrics.sh allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}/
+          cat allure-history/${{ github.run_number }}/metrics.json
+          echo "Metrics extracted and dashboard generated"
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
