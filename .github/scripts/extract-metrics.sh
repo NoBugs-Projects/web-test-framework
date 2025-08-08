@@ -98,31 +98,16 @@ extract_allure_metrics() {
         fi
     else
         echo "No results.json found, checking for individual test files..."
-        # Set allure_data_dir to the data directory
-        allure_data_dir="$allure_dir/data"
+        # Set allure_data_dir to the allure-maven-plugin/data directory
+        allure_data_dir="$allure_dir/allure-maven-plugin/data"
         
         # Look for individual test result files
         if [ -d "$allure_data_dir" ]; then
-            echo "Checking directory: $allure_data_dir"
-            echo "Looking for test cases in: $allure_data_dir/test-cases"
             # Count test case files in test-cases directory
             total_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f 2>/dev/null | wc -l)
-            echo "Found $total_tests test case files"
             passed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"passed"' {} \; 2>/dev/null | wc -l)
             failed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"failed"' {} \; 2>/dev/null | wc -l)
             skipped_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"skipped"' {} \; 2>/dev/null | wc -l)
-            
-            echo "Status counts - Passed: $passed_tests, Failed: $failed_tests, Skipped: $skipped_tests"
-            
-            # If no status data found, try alternative patterns
-            if [ "$passed_tests" = "0" ] && [ "$failed_tests" = "0" ] && [ "$skipped_tests" = "0" ]; then
-                echo "No status data found with standard patterns, trying alternative patterns..."
-                # Try different status patterns
-                passed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status": "passed"' {} \; 2>/dev/null | wc -l)
-                failed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status": "failed"' {} \; 2>/dev/null | wc -l)
-                skipped_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status": "skipped"' {} \; 2>/dev/null | wc -l)
-                echo "Alternative patterns - Passed: $passed_tests, Failed: $failed_tests, Skipped: $skipped_tests"
-            fi
             
             # Extract flaky tests
             flaky_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"flaky":true' {} \; 2>/dev/null | wc -l)
@@ -233,15 +218,17 @@ extract_swagger_metrics() {
     local partial_coverage=0
     local empty_coverage=0
     
-            # Look for swagger coverage report
-        local swagger_report=""
-        if [ -f "$swagger_dir/swagger-coverage-report.html" ]; then
-            swagger_report="$swagger_dir/swagger-coverage-report.html"
-        elif [ -f "swagger-coverage-report.html" ]; then
-            swagger_report="swagger-coverage-report.html"
-        elif [ -f "reports/swagger-coverage-report.html" ]; then
-            swagger_report="reports/swagger-coverage-report.html"
-        fi
+    # Look for swagger coverage report
+    local swagger_report=""
+    if [ -f "$swagger_dir/swagger-coverage-report.html" ]; then
+        swagger_report="$swagger_dir/swagger-coverage-report.html"
+    elif [ -f "swagger-coverage-report.html" ]; then
+        swagger_report="swagger-coverage-report.html"
+    elif [ -f "reports/swagger-coverage-report.html" ]; then
+        swagger_report="reports/swagger-coverage-report.html"
+    elif [ -f "/Users/alex.pshe/IdeaProjects/web-test-framework/reports/swagger-coverage-report.html" ]; then
+        swagger_report="/Users/alex.pshe/IdeaProjects/web-test-framework/reports/swagger-coverage-report.html"
+    fi
     
     if [ -n "$swagger_report" ]; then
         echo "Found Swagger report: $swagger_report"
@@ -250,55 +237,39 @@ extract_swagger_metrics() {
         # Extract operations coverage
         total_operations=$(grep -o 'All operations: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
         covered_operations=$(grep -o 'Operations without calls: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
-        
-        # Ensure we have valid integers
-        total_operations=${total_operations:-0}
-        covered_operations=${covered_operations:-0}
-        
-        if [ "$total_operations" -gt 0 ] 2>/dev/null; then
+        if [ "$total_operations" -gt 0 ]; then
             covered_operations=$((total_operations - covered_operations))
         fi
         
         # Extract tags coverage
         total_tags=$(grep -o 'All tags: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
         covered_tags=$(grep -o 'Tags without calls: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
-        
-        # Ensure we have valid integers
-        total_tags=${total_tags:-0}
-        covered_tags=${covered_tags:-0}
-        
-        if [ "$total_tags" -gt 0 ] 2>/dev/null; then
+        if [ "$total_tags" -gt 0 ]; then
             covered_tags=$((total_tags - covered_tags))
         fi
         
         # Extract conditions coverage
         total_conditions=$(grep -o 'Total: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
-        total_conditions=${total_conditions:-0}
         
         # Extract coverage percentages
         full_coverage=$(grep -o 'Full coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         partial_coverage=$(grep -o 'Partial coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         empty_coverage=$(grep -o 'Empty coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         
-        # Ensure we have valid numbers
-        full_coverage=${full_coverage:-0}
-        partial_coverage=${partial_coverage:-0}
-        empty_coverage=${empty_coverage:-0}
-        
         # Calculate API coverage percentage
         local api_coverage=0
-        if [ "$total_operations" -gt 0 ] 2>/dev/null; then
+        if [ "$total_operations" -gt 0 ]; then
             api_coverage=$(echo "scale=1; $covered_operations * 100 / $total_operations" | bc -l 2>/dev/null || echo "0")
         fi
         
         # Calculate conditions coverage percentage
         local conditions_coverage=0
-        if [ "$total_conditions" -gt 0 ] 2>/dev/null; then
+        if [ "$total_conditions" -gt 0 ]; then
             conditions_coverage=$(echo "scale=1; $covered_conditions * 100 / $total_conditions" | bc -l 2>/dev/null || echo "0")
         fi
         
         # If we have no covered conditions data, estimate based on API coverage
-        if [ "$covered_conditions" = "0" ] && [ "$total_conditions" -gt 0 ] 2>/dev/null; then
+        if [ "$covered_conditions" = "0" ] && [ "$total_conditions" -gt 0 ]; then
             covered_conditions=$(echo "scale=0; $total_conditions * $api_coverage / 100" | bc -l 2>/dev/null || echo "0")
             conditions_coverage=$api_coverage
         fi
@@ -422,11 +393,7 @@ generate_final_index() {
     fi
     
     # Create a copy of the template
-    # Ensure the output directory exists and has proper permissions
-    mkdir -p "$(dirname "$final_file")"
-    
-    # Copy the template file
-    sudo cp "$template_file" "$final_file"
+    cp "$template_file" "$final_file"
     
     # Extract metrics from JSON file for placeholder replacement
     if [ -f "$metrics_file" ] && command -v jq &> /dev/null; then
@@ -497,29 +464,83 @@ generate_final_index() {
             swagger_tags_coverage=$(echo "scale=1; $swagger_covered_tags * 100 / $swagger_total_tags" | bc -l 2>/dev/null || echo "0")
         fi
         
-        # Replace placeholders in the HTML file
-        sed -i '' "s/{{ALLURE_PASS_RATE}}/$allure_pass_rate/g" "$final_file"
-        sed -i '' "s/{{ALLURE_TOTAL_TESTS}}/$allure_total_tests/g" "$final_file"
-        sed -i '' "s/{{ALLURE_PASSED_TESTS}}/$allure_passed_tests/g" "$final_file"
-        sed -i '' "s/{{ALLURE_FAILED_TESTS}}/$allure_failed_tests/g" "$final_file"
-        sed -i '' "s/{{ALLURE_SKIPPED_TESTS}}/$allure_skipped_tests/g" "$final_file"
-        sed -i '' "s/{{ALLURE_FLAKY_TESTS}}/$allure_flaky_tests/g" "$final_file"
-        sed -i '' "s/{{ALLURE_FLAKY_RATE}}/$allure_flaky_rate/g" "$final_file"
-        sed -i '' "s/{{ALLURE_CRITICAL_FAILURES}}/$allure_critical_failures/g" "$final_file"
-        sed -i '' "s/{{ALLURE_AVG_DURATION}}/$allure_avg_duration_formatted/g" "$final_file"
-        sed -i '' "s/{{ALLURE_TOTAL_DURATION}}/$allure_total_duration_formatted/g" "$final_file"
+        # Set environment variables for substitution
+        export ALLURE_PASS_RATE="$allure_pass_rate"
+        export ALLURE_TOTAL_TESTS="$allure_total_tests"
+        export ALLURE_PASSED_TESTS="$allure_passed_tests"
+        export ALLURE_FAILED_TESTS="$allure_failed_tests"
+        export ALLURE_SKIPPED_TESTS="$allure_skipped_tests"
+        export ALLURE_FLAKY_TESTS="$allure_flaky_tests"
+        export ALLURE_FLAKY_RATE="$allure_flaky_rate"
+        export ALLURE_CRITICAL_FAILURES="$allure_critical_failures"
+        export ALLURE_AVG_DURATION="$allure_avg_duration_formatted"
+        export ALLURE_TOTAL_DURATION="$allure_total_duration_formatted"
         
-        sed -i '' "s/{{SWAGGER_API_COVERAGE}}/$swagger_api_coverage/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_CONDITIONS_COVERAGE}}/$swagger_conditions_coverage/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_FULL_COVERAGE}}/$swagger_full_coverage/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_PARTIAL_COVERAGE}}/$swagger_partial_coverage/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_EMPTY_COVERAGE}}/$swagger_empty_coverage/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_OPERATIONS_COVERAGE}}/$swagger_operations_coverage/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_COVERED_OPERATIONS}}/$swagger_covered_operations/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_TOTAL_OPERATIONS}}/$swagger_total_operations/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_TAGS_COVERAGE}}/$swagger_tags_coverage/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_COVERED_TAGS}}/$swagger_covered_tags/g" "$final_file"
-        sed -i '' "s/{{SWAGGER_TOTAL_TAGS}}/$swagger_total_tags/g" "$final_file"
+        export SWAGGER_API_COVERAGE="$swagger_api_coverage"
+        export SWAGGER_CONDITIONS_COVERAGE="$swagger_conditions_coverage"
+        export SWAGGER_FULL_COVERAGE="$swagger_full_coverage"
+        export SWAGGER_PARTIAL_COVERAGE="$swagger_partial_coverage"
+        export SWAGGER_EMPTY_COVERAGE="$swagger_empty_coverage"
+        export SWAGGER_OPERATIONS_COVERAGE="$swagger_operations_coverage"
+        export SWAGGER_COVERED_OPERATIONS="$swagger_covered_operations"
+        export SWAGGER_TOTAL_OPERATIONS="$swagger_total_operations"
+        export SWAGGER_TAGS_COVERAGE="$swagger_tags_coverage"
+        export SWAGGER_COVERED_TAGS="$swagger_covered_tags"
+        export SWAGGER_TOTAL_TAGS="$swagger_total_tags"
+        
+        # Use envsubst to replace all placeholders at once
+        if command -v envsubst &> /dev/null; then
+            echo "Using envsubst for placeholder replacement..."
+            envsubst < "$final_file" > "${final_file}.tmp" && mv "${final_file}.tmp" "$final_file"
+        else
+            echo "envsubst not available, using awk for placeholder replacement..."
+            # Fallback to awk for more efficient replacement
+            awk -v allure_pass_rate="$allure_pass_rate" \
+                -v allure_total_tests="$allure_total_tests" \
+                -v allure_passed_tests="$allure_passed_tests" \
+                -v allure_failed_tests="$allure_failed_tests" \
+                -v allure_skipped_tests="$allure_skipped_tests" \
+                -v allure_flaky_tests="$allure_flaky_tests" \
+                -v allure_flaky_rate="$allure_flaky_rate" \
+                -v allure_critical_failures="$allure_critical_failures" \
+                -v allure_avg_duration="$allure_avg_duration_formatted" \
+                -v allure_total_duration="$allure_total_duration_formatted" \
+                -v swagger_api_coverage="$swagger_api_coverage" \
+                -v swagger_conditions_coverage="$swagger_conditions_coverage" \
+                -v swagger_full_coverage="$swagger_full_coverage" \
+                -v swagger_partial_coverage="$swagger_partial_coverage" \
+                -v swagger_empty_coverage="$swagger_empty_coverage" \
+                -v swagger_operations_coverage="$swagger_operations_coverage" \
+                -v swagger_covered_operations="$swagger_covered_operations" \
+                -v swagger_total_operations="$swagger_total_operations" \
+                -v swagger_tags_coverage="$swagger_tags_coverage" \
+                -v swagger_covered_tags="$swagger_covered_tags" \
+                -v swagger_total_tags="$swagger_total_tags" \
+                '{
+                    gsub(/\$ALLURE_PASS_RATE/, allure_pass_rate);
+                    gsub(/\$ALLURE_TOTAL_TESTS/, allure_total_tests);
+                    gsub(/\$ALLURE_PASSED_TESTS/, allure_passed_tests);
+                    gsub(/\$ALLURE_FAILED_TESTS/, allure_failed_tests);
+                    gsub(/\$ALLURE_SKIPPED_TESTS/, allure_skipped_tests);
+                    gsub(/\$ALLURE_FLAKY_TESTS/, allure_flaky_tests);
+                    gsub(/\$ALLURE_FLAKY_RATE/, allure_flaky_rate);
+                    gsub(/\$ALLURE_CRITICAL_FAILURES/, allure_critical_failures);
+                    gsub(/\$ALLURE_AVG_DURATION/, allure_avg_duration);
+                    gsub(/\$ALLURE_TOTAL_DURATION/, allure_total_duration);
+                    gsub(/\$SWAGGER_API_COVERAGE/, swagger_api_coverage);
+                    gsub(/\$SWAGGER_CONDITIONS_COVERAGE/, swagger_conditions_coverage);
+                    gsub(/\$SWAGGER_FULL_COVERAGE/, swagger_full_coverage);
+                    gsub(/\$SWAGGER_PARTIAL_COVERAGE/, swagger_partial_coverage);
+                    gsub(/\$SWAGGER_EMPTY_COVERAGE/, swagger_empty_coverage);
+                    gsub(/\$SWAGGER_OPERATIONS_COVERAGE/, swagger_operations_coverage);
+                    gsub(/\$SWAGGER_COVERED_OPERATIONS/, swagger_covered_operations);
+                    gsub(/\$SWAGGER_TOTAL_OPERATIONS/, swagger_total_operations);
+                    gsub(/\$SWAGGER_TAGS_COVERAGE/, swagger_tags_coverage);
+                    gsub(/\$SWAGGER_COVERED_TAGS/, swagger_covered_tags);
+                    gsub(/\$SWAGGER_TOTAL_TAGS/, swagger_total_tags);
+                    print;
+                }' "$final_file" > "${final_file}.tmp" && mv "${final_file}.tmp" "$final_file"
+        fi
         
         echo "✅ Placeholders replaced with actual metrics"
     else
