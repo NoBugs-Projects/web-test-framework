@@ -37,7 +37,7 @@ extract_allure_metrics() {
     local total_duration=0
     local test_count=0
     
-    # Check if results.json exists in allure-maven-plugin/data
+    # Check if results.json exists in different possible locations
     if [ -f "$allure_dir/allure-maven-plugin/data/results.json" ]; then
         echo "Found results.json in allure-maven-plugin/data, extracting metrics..."
         allure_data_dir="$allure_dir/allure-maven-plugin/data"
@@ -70,6 +70,9 @@ extract_allure_metrics() {
     elif [ -f "$allure_dir/results.json" ]; then
         echo "Found results.json, extracting metrics..."
         allure_data_dir="$allure_dir"
+    elif [ -f "$allure_dir/data/results.json" ]; then
+        echo "Found results.json in data/, extracting metrics..."
+        allure_data_dir="$allure_dir/data"
         
         # Extract metrics using jq if available, otherwise use grep/sed
         if command -v jq &> /dev/null; then
@@ -98,8 +101,20 @@ extract_allure_metrics() {
         fi
     else
         echo "No results.json found, checking for individual test files..."
-        # Set allure_data_dir to the allure-maven-plugin/data directory
-        allure_data_dir="$allure_dir/allure-maven-plugin/data"
+        
+        # Try different directory structures
+        if [ -d "$allure_dir/data" ]; then
+            # CI environment structure (preferred)
+            allure_data_dir="$allure_dir/data"
+        elif [ -d "$allure_dir/allure-maven-plugin/data" ]; then
+            # Local development structure
+            allure_data_dir="$allure_dir/allure-maven-plugin/data"
+        else
+            # Fallback to data directory
+            allure_data_dir="$allure_dir/data"
+        fi
+        
+        echo "Checking directory: $allure_data_dir"
         
         # Look for individual test result files
         if [ -d "$allure_data_dir" ]; then
@@ -394,6 +409,8 @@ generate_final_index() {
     
     # Create a copy of the template
     cp "$template_file" "$final_file"
+
+    cat "$final_file"
     
     # Extract metrics from JSON file for placeholder replacement
     if [ -f "$metrics_file" ] && command -v jq &> /dev/null; then
