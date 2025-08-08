@@ -70,6 +70,7 @@ jobs:
           chmod +x .github/scripts/extract-metrics.sh
           .github/scripts/extract-metrics.sh allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}/
           cat allure-history/${{ github.run_number }}/metrics.json
+          cat allure-history/${{ github.run_number }}/index.html
           echo "Metrics extracted and dashboard generated"
 
       - name: Publish test report
