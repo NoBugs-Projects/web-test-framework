@@ -112,6 +112,18 @@ extract_allure_metrics() {
             failed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"failed"' {} \; 2>/dev/null | wc -l)
             skipped_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"skipped"' {} \; 2>/dev/null | wc -l)
             
+            echo "Status counts - Passed: $passed_tests, Failed: $failed_tests, Skipped: $skipped_tests"
+            
+            # If no status data found, try alternative patterns
+            if [ "$passed_tests" = "0" ] && [ "$failed_tests" = "0" ] && [ "$skipped_tests" = "0" ]; then
+                echo "No status data found with standard patterns, trying alternative patterns..."
+                # Try different status patterns
+                passed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status": "passed"' {} \; 2>/dev/null | wc -l)
+                failed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status": "failed"' {} \; 2>/dev/null | wc -l)
+                skipped_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status": "skipped"' {} \; 2>/dev/null | wc -l)
+                echo "Alternative patterns - Passed: $passed_tests, Failed: $failed_tests, Skipped: $skipped_tests"
+            fi
+            
             # Extract flaky tests
             flaky_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"flaky":true' {} \; 2>/dev/null | wc -l)
             
@@ -414,7 +426,7 @@ generate_final_index() {
     mkdir -p "$(dirname "$final_file")"
     
     # Copy the template file
-    cp "$template_file" "$final_file"
+    sudo cp "$template_file" "$final_file"
     
     # Extract metrics from JSON file for placeholder replacement
     if [ -f "$metrics_file" ] && command -v jq &> /dev/null; then
