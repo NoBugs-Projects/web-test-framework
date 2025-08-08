@@ -70,9 +70,6 @@ extract_allure_metrics() {
     elif [ -f "$allure_dir/results.json" ]; then
         echo "Found results.json, extracting metrics..."
         allure_data_dir="$allure_dir"
-    elif [ -d "$allure_dir/data" ]; then
-        echo "Found data directory, checking for test cases..."
-        allure_data_dir="$allure_dir/data"
         
         # Extract metrics using jq if available, otherwise use grep/sed
         if command -v jq &> /dev/null; then
@@ -104,10 +101,9 @@ extract_allure_metrics() {
         # Set allure_data_dir to the allure-maven-plugin/data directory
         allure_data_dir="$allure_dir/allure-maven-plugin/data"
         
-            # Look for individual test result files
-    if [ -d "$allure_data_dir" ]; then
-        # First try to find test case files in test-cases directory
-        if [ -d "$allure_data_dir/test-cases" ]; then
+        # Look for individual test result files
+        if [ -d "$allure_data_dir" ]; then
+            # Count test case files in test-cases directory
             total_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f 2>/dev/null | wc -l)
             passed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"passed"' {} \; 2>/dev/null | wc -l)
             failed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"failed"' {} \; 2>/dev/null | wc -l)
@@ -135,40 +131,6 @@ extract_allure_metrics() {
             # Convert from milliseconds to seconds
             if [ "$total_duration" -gt 0 ]; then
                 total_duration=$((total_duration / 1000))
-            fi
-        else
-            echo "No test-cases directory found, checking for other Allure data files..."
-            # Try to extract from other Allure data files
-            if [ -f "$allure_data_dir/behaviors.json" ]; then
-                echo "Found behaviors.json, extracting metrics..."
-                if command -v jq &> /dev/null; then
-                    total_tests=$(jq '.children | length' "$allure_data_dir/behaviors.json" 2>/dev/null || echo "0")
-                    # For behaviors.json, we'll estimate based on total tests
-                    passed_tests=$total_tests
-                    failed_tests=0
-                    skipped_tests=0
-                    flaky_tests=0
-                    critical_failures=0
-                fi
-            elif [ -f "$allure_data_dir/suites.json" ]; then
-                echo "Found suites.json, extracting metrics..."
-                if command -v jq &> /dev/null; then
-                    total_tests=$(jq '.children | length' "$allure_data_dir/suites.json" 2>/dev/null || echo "0")
-                    # For suites.json, we'll estimate based on total tests
-                    passed_tests=$total_tests
-                    failed_tests=0
-                    skipped_tests=0
-                    flaky_tests=0
-                    critical_failures=0
-                fi
-            else
-                echo "No Allure data files found, using default values..."
-                total_tests=0
-                passed_tests=0
-                failed_tests=0
-                skipped_tests=0
-                flaky_tests=0
-                critical_failures=0
             fi
         fi
     fi
@@ -275,39 +237,55 @@ extract_swagger_metrics() {
         # Extract operations coverage
         total_operations=$(grep -o 'All operations: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
         covered_operations=$(grep -o 'Operations without calls: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
-        if [ "$total_operations" -gt 0 ]; then
+        
+        # Ensure we have valid integers
+        total_operations=${total_operations:-0}
+        covered_operations=${covered_operations:-0}
+        
+        if [ "$total_operations" -gt 0 ] 2>/dev/null; then
             covered_operations=$((total_operations - covered_operations))
         fi
         
         # Extract tags coverage
         total_tags=$(grep -o 'All tags: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
         covered_tags=$(grep -o 'Tags without calls: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
-        if [ "$total_tags" -gt 0 ]; then
+        
+        # Ensure we have valid integers
+        total_tags=${total_tags:-0}
+        covered_tags=${covered_tags:-0}
+        
+        if [ "$total_tags" -gt 0 ] 2>/dev/null; then
             covered_tags=$((total_tags - covered_tags))
         fi
         
         # Extract conditions coverage
         total_conditions=$(grep -o 'Total: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
+        total_conditions=${total_conditions:-0}
         
         # Extract coverage percentages
         full_coverage=$(grep -o 'Full coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         partial_coverage=$(grep -o 'Partial coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         empty_coverage=$(grep -o 'Empty coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         
+        # Ensure we have valid numbers
+        full_coverage=${full_coverage:-0}
+        partial_coverage=${partial_coverage:-0}
+        empty_coverage=${empty_coverage:-0}
+        
         # Calculate API coverage percentage
         local api_coverage=0
-        if [ "$total_operations" -gt 0 ]; then
+        if [ "$total_operations" -gt 0 ] 2>/dev/null; then
             api_coverage=$(echo "scale=1; $covered_operations * 100 / $total_operations" | bc -l 2>/dev/null || echo "0")
         fi
         
         # Calculate conditions coverage percentage
         local conditions_coverage=0
-        if [ "$total_conditions" -gt 0 ]; then
+        if [ "$total_conditions" -gt 0 ] 2>/dev/null; then
             conditions_coverage=$(echo "scale=1; $covered_conditions * 100 / $total_conditions" | bc -l 2>/dev/null || echo "0")
         fi
         
         # If we have no covered conditions data, estimate based on API coverage
-        if [ "$covered_conditions" = "0" ] && [ "$total_conditions" -gt 0 ]; then
+        if [ "$covered_conditions" = "0" ] && [ "$total_conditions" -gt 0 ] 2>/dev/null; then
             covered_conditions=$(echo "scale=0; $total_conditions * $api_coverage / 100" | bc -l 2>/dev/null || echo "0")
             conditions_coverage=$api_coverage
         fi

@@ -12,17 +12,17 @@
     "totalDuration": 270
   },
   "swagger": {
-    "totalOperations": 433,
-    "coveredOperations": 18,
-    "totalTags": 30,
-    "coveredTags": 7,
-    "totalConditions": 1885,
-    "coveredConditions": 77,
-    "apiCoverage": 4.1,
-    "conditionsCoverage": 4.1,
-    "fullCoverage": 0.462,
-    "partialCoverage": 2.309,
-    "emptyCoverage": 97.229,
+    "totalOperations": 0,
+    "coveredOperations": 0,
+    "totalTags": 0,
+    "coveredTags": 0,
+    "totalConditions": 0,
+    "coveredConditions": 0,
+    "apiCoverage": 0,
+    "conditionsCoverage": 0,
+    "fullCoverage": 0,
+    "partialCoverage": 0,
+    "emptyCoverage": 0,
     "methodCoverage": {
       "GET": {
         "coverage": 85,
