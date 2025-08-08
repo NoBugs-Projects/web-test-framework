@@ -67,6 +67,7 @@ jobs:
             sudo cp .github/report/*.css allure-history/${{ github.run_number }}/ || echo "Failed to copy CSS files"
           fi
           # Execute extract-metrics.sh script
+          ls -R allure-history/${{ github.run_number }}/
           chmod +x .github/scripts/extract-metrics.sh
           .github/scripts/extract-metrics.sh allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}/
           cat allure-history/${{ github.run_number }}/metrics.json
