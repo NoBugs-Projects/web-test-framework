@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8acfc1cc-8eb8-4519-8d0e-3d285c15d494" name="Changes" comment="Fix report">
-      <change beforePath="$PROJECT_DIR$/.github/report/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/.github/report/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/report/report_styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/.github/report/report_styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/workflows/report.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/report.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/java/com/teamcity/api/steps/AdminSteps.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/java/com/teamcity/ui/annotations/UserSession.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/java/com/teamcity/ui/BuildExecutionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/java/com/teamcity/ui/listeners/UserSessionListener.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,23 +48,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;TestNG.CreateBuildTypeTest.userCreatesBuildTypeTest.executor&quot;: &quot;Run&quot;,
-    &quot;TestNG.ProjectTest.userCreatesProjectTest.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/alex.pshe/IdeaProjects/web-test-framework/.github/report&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "TestNG.BuildTypeTest.executor": "Run",
+    "TestNG.CreateBuildTypeTest.userCreatesBuildTypeTest.executor": "Run",
+    "TestNG.ProjectTest.userCreatesProjectTest.executor": "Run",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/alex.pshe/IdeaProjects/web-test-framework/reports"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/reports" />
       <recent name="$PROJECT_DIR$/.github/report" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/target" />
       <recent name="$PROJECT_DIR$/web-test-framework-python/tests/api" />
       <recent name="$PROJECT_DIR$/.github/report" />
       <recent name="$PROJECT_DIR$/.github" />

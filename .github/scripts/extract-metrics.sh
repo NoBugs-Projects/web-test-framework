@@ -98,13 +98,16 @@ extract_allure_metrics() {
         fi
     else
         echo "No results.json found, checking for individual test files..."
-        # Set allure_data_dir to the allure-maven-plugin/data directory
-        allure_data_dir="$allure_dir/allure-maven-plugin/data"
+        # Set allure_data_dir to the data directory
+        allure_data_dir="$allure_dir/data"
         
         # Look for individual test result files
         if [ -d "$allure_data_dir" ]; then
+            echo "Checking directory: $allure_data_dir"
+            echo "Looking for test cases in: $allure_data_dir/test-cases"
             # Count test case files in test-cases directory
             total_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f 2>/dev/null | wc -l)
+            echo "Found $total_tests test case files"
             passed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"passed"' {} \; 2>/dev/null | wc -l)
             failed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"failed"' {} \; 2>/dev/null | wc -l)
             skipped_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"skipped"' {} \; 2>/dev/null | wc -l)
@@ -218,17 +221,15 @@ extract_swagger_metrics() {
     local partial_coverage=0
     local empty_coverage=0
     
-    # Look for swagger coverage report
-    local swagger_report=""
-    if [ -f "$swagger_dir/swagger-coverage-report.html" ]; then
-        swagger_report="$swagger_dir/swagger-coverage-report.html"
-    elif [ -f "swagger-coverage-report.html" ]; then
-        swagger_report="swagger-coverage-report.html"
-    elif [ -f "reports/swagger-coverage-report.html" ]; then
-        swagger_report="reports/swagger-coverage-report.html"
-    elif [ -f "/Users/alex.pshe/IdeaProjects/web-test-framework/reports/swagger-coverage-report.html" ]; then
-        swagger_report="/Users/alex.pshe/IdeaProjects/web-test-framework/reports/swagger-coverage-report.html"
-    fi
+            # Look for swagger coverage report
+        local swagger_report=""
+        if [ -f "$swagger_dir/swagger-coverage-report.html" ]; then
+            swagger_report="$swagger_dir/swagger-coverage-report.html"
+        elif [ -f "swagger-coverage-report.html" ]; then
+            swagger_report="swagger-coverage-report.html"
+        elif [ -f "reports/swagger-coverage-report.html" ]; then
+            swagger_report="reports/swagger-coverage-report.html"
+        fi
     
     if [ -n "$swagger_report" ]; then
         echo "Found Swagger report: $swagger_report"
@@ -409,6 +410,8 @@ generate_final_index() {
     fi
     
     # Create a copy of the template
+    # Ensure the output directory exists and has proper permissions
+    mkdir -p "$(dirname "$final_file")"
     cp "$template_file" "$final_file"
     
     # Extract metrics from JSON file for placeholder replacement
