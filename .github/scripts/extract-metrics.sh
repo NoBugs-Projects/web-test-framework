@@ -393,7 +393,7 @@ generate_final_index() {
     fi
 
     # Create a copy of the template
-    cp "$template_file" "$final_file"
+    sudo cp "$template_file" "$final_file"
 
     # Extract metrics from JSON file for placeholder replacement
     if [ -f "$metrics_file" ] && command -v jq &> /dev/null; then
