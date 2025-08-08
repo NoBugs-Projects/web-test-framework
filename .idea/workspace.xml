@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8acfc1cc-8eb8-4519-8d0e-3d285c15d494" name="Changes" comment="Fix report">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/report.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/report.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/scripts/extract-metrics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/.github/scripts/extract-metrics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metrics.json" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -322,7 +324,47 @@
       <option name="project" value="LOCAL" />
       <updated>1754674996554</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Fix report">
+      <option name="closed" value="true" />
+      <created>1754676636422</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1754676636422</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Fix report">
+      <option name="closed" value="true" />
+      <created>1754682665055</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1754682665055</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Fix report">
+      <option name="closed" value="true" />
+      <created>1754683889839</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1754683889839</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Fix report">
+      <option name="closed" value="true" />
+      <created>1754683897060</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1754683897060</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Fix report">
+      <option name="closed" value="true" />
+      <created>1754684603049</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1754684603049</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

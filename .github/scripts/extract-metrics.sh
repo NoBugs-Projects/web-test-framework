@@ -491,7 +491,7 @@ generate_final_index() {
         # Use envsubst to replace all placeholders at once
         if command -v envsubst &> /dev/null; then
             echo "Using envsubst for placeholder replacement..."
-            envsubst < "$final_file" > "${final_file}.tmp" && mv "${final_file}.tmp" "$final_file"
+            envsubst < "$final_file" > "${final_file}.tmp" && sudo mv "${final_file}.tmp" "$final_file"
         else
             echo "envsubst not available, using awk for placeholder replacement..."
             # Fallback to awk for more efficient replacement
@@ -539,7 +539,7 @@ generate_final_index() {
                     gsub(/\$SWAGGER_COVERED_TAGS/, swagger_covered_tags);
                     gsub(/\$SWAGGER_TOTAL_TAGS/, swagger_total_tags);
                     print;
-                }' "$final_file" > "${final_file}.tmp" && mv "${final_file}.tmp" "$final_file"
+                }' "$final_file" > "${final_file}.tmp" && sudo mv "${final_file}.tmp" "$final_file"
         fi
 
         echo "✅ Placeholders replaced with actual metrics"
@@ -568,7 +568,7 @@ main() {
 
     # Copy metrics.json to output directory
     if [ -f "$METRICS_FILE" ]; then
-        cp "$METRICS_FILE" "$OUTPUT_DIR/"
+        sudo cp "$METRICS_FILE" "$OUTPUT_DIR/"
         echo "📁 Metrics file copied to: $OUTPUT_DIR/$METRICS_FILE"
     fi
 
