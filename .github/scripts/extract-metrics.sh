@@ -412,6 +412,8 @@ generate_final_index() {
     # Create a copy of the template
     # Ensure the output directory exists and has proper permissions
     mkdir -p "$(dirname "$final_file")"
+    
+    # Copy the template file
     cp "$template_file" "$final_file"
     
     # Extract metrics from JSON file for placeholder replacement
