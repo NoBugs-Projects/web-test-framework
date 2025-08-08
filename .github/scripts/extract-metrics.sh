@@ -99,7 +99,7 @@ extract_allure_metrics() {
             failed_tests=$(grep -c '"status": "failed"' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             skipped_tests=$(grep -c '"status": "skipped"' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
         fi
-    else
+    
         echo "No results.json found, checking for individual test files..."
         
         # Try different directory structures
