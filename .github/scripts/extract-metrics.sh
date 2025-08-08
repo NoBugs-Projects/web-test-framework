@@ -37,11 +37,11 @@ extract_allure_metrics() {
     local total_duration=0
     local test_count=0
     
-    # Check if results.json exists in different possible locations
+    # Check if results.json exists in allure-maven-plugin/data
     if [ -f "$allure_dir/allure-maven-plugin/data/results.json" ]; then
         echo "Found results.json in allure-maven-plugin/data, extracting metrics..."
         allure_data_dir="$allure_dir/allure-maven-plugin/data"
-        
+
         # Extract metrics using jq if available, otherwise use grep/sed
         if command -v jq &> /dev/null; then
             # Using jq for JSON parsing
@@ -49,14 +49,14 @@ extract_allure_metrics() {
             passed_tests=$(jq '[.[] | select(.status == "passed")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             failed_tests=$(jq '[.[] | select(.status == "failed")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             skipped_tests=$(jq '[.[] | select(.status == "skipped")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
-            
+
             # Extract duration
             total_duration=$(jq '[.[] | .duration // 0] | add' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             test_count=$(jq '[.[] | select(.duration != null)] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
-            
+
             # Extract critical failures
             critical_failures=$(jq '[.[] | select(.status == "failed" and (.severity // "normal") == "critical")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
-            
+
             # Extract flaky tests
             flaky_tests=$(jq '[.[] | select(.flaky == true)] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
         else
@@ -70,10 +70,7 @@ extract_allure_metrics() {
     elif [ -f "$allure_dir/results.json" ]; then
         echo "Found results.json, extracting metrics..."
         allure_data_dir="$allure_dir"
-    elif [ -f "$allure_dir/data/results.json" ]; then
-        echo "Found results.json in data/, extracting metrics..."
-        allure_data_dir="$allure_dir/data"
-        
+
         # Extract metrics using jq if available, otherwise use grep/sed
         if command -v jq &> /dev/null; then
             # Using jq for JSON parsing
@@ -81,14 +78,14 @@ extract_allure_metrics() {
             passed_tests=$(jq '[.[] | select(.status == "passed")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             failed_tests=$(jq '[.[] | select(.status == "failed")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             skipped_tests=$(jq '[.[] | select(.status == "skipped")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
-            
+
             # Extract duration
             total_duration=$(jq '[.[] | .duration // 0] | add' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             test_count=$(jq '[.[] | select(.duration != null)] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
-            
+
             # Extract critical failures
             critical_failures=$(jq '[.[] | select(.status == "failed" and (.severity // "normal") == "critical")] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
-            
+
             # Extract flaky tests
             flaky_tests=$(jq '[.[] | select(.flaky == true)] | length' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
         else
@@ -99,23 +96,11 @@ extract_allure_metrics() {
             failed_tests=$(grep -c '"status": "failed"' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
             skipped_tests=$(grep -c '"status": "skipped"' "$allure_data_dir/results.json" 2>/dev/null || echo "0")
         fi
-    
+    else
         echo "No results.json found, checking for individual test files..."
-        
-        # Try different directory structures
-        if [ -d "$allure_dir/data" ]; then
-            # CI environment structure (preferred)
-            allure_data_dir="$allure_dir/data"
-        elif [ -d "$allure_dir/allure-maven-plugin/data" ]; then
-            # Local development structure
-            allure_data_dir="$allure_dir/allure-maven-plugin/data"
-        else
-            # Fallback to data directory
-            allure_data_dir="$allure_dir/data"
-        fi
-        
-        echo "Checking directory: $allure_data_dir"
-        
+        # Set allure_data_dir to the allure-maven-plugin/data directory
+        allure_data_dir="$allure_dir/data"
+
         # Look for individual test result files
         if [ -d "$allure_data_dir" ]; then
             # Count test case files in test-cases directory
@@ -123,13 +108,13 @@ extract_allure_metrics() {
             passed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"passed"' {} \; 2>/dev/null | wc -l)
             failed_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"failed"' {} \; 2>/dev/null | wc -l)
             skipped_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"status":"skipped"' {} \; 2>/dev/null | wc -l)
-            
+
             # Extract flaky tests
             flaky_tests=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"flaky":true' {} \; 2>/dev/null | wc -l)
-            
+
             # Extract critical failures
             critical_failures=$(find "$allure_data_dir/test-cases" -name "*.json" -type f -exec grep -l '"severity":"critical"' {} \; 2>/dev/null | wc -l)
-            
+
             # Extract duration data
             total_duration=0
             test_count=0
@@ -142,34 +127,34 @@ extract_allure_metrics() {
                     fi
                 fi
             done
-            
+
             # Convert from milliseconds to seconds
             if [ "$total_duration" -gt 0 ]; then
                 total_duration=$((total_duration / 1000))
             fi
         fi
     fi
-    
+
     # Calculate percentages
     local pass_rate=0
     local flaky_rate=0
     local avg_duration=0
-    
+
     if [ "$total_tests" -gt 0 ]; then
         pass_rate=$(echo "scale=1; $passed_tests * 100 / $total_tests" | bc -l 2>/dev/null || echo "0")
         flaky_rate=$(echo "scale=1; $flaky_tests * 100 / $total_tests" | bc -l 2>/dev/null || echo "0")
     fi
-    
+
     if [ "$test_count" -gt 0 ]; then
         avg_duration=$(echo "scale=0; $total_duration / $test_count" | bc -l 2>/dev/null || echo "0")
     fi
-    
+
     # If we have no duration data, estimate based on test count
     if [ "$avg_duration" = "0" ] && [ "$total_tests" -gt 0 ]; then
         avg_duration=30  # Assume 30 seconds per test on average
         total_duration=$((total_tests * 30))
     fi
-    
+
     # If we have no test status data, provide realistic estimates
     if [ "$passed_tests" = "0" ] && [ "$failed_tests" = "0" ] && [ "$total_tests" -gt 0 ]; then
         echo "No test status data found, providing realistic estimates..."
@@ -187,7 +172,7 @@ extract_allure_metrics() {
             echo "Calculated pass rate: ${pass_rate}% (passed: $passed_tests, total: $total_tests)"
         fi
     fi
-    
+
     # Create Allure metrics JSON
     cat > "$metrics_file" << EOF
 {
@@ -205,7 +190,7 @@ extract_allure_metrics() {
   }
 }
 EOF
-    
+
     echo -e "${GREEN}✅ Allure metrics extracted:${NC}"
     echo "  - Total tests: $total_tests"
     echo "  - Passed: $passed_tests"
@@ -219,9 +204,9 @@ EOF
 extract_swagger_metrics() {
     local swagger_dir="$1"
     local metrics_file="$2"
-    
+
     echo -e "${YELLOW}🔍 Extracting Swagger metrics from: $swagger_dir${NC}"
-    
+
     # Initialize Swagger metrics
     local total_operations=0
     local covered_operations=0
@@ -232,7 +217,7 @@ extract_swagger_metrics() {
     local full_coverage=0
     local partial_coverage=0
     local empty_coverage=0
-    
+
     # Look for swagger coverage report
     local swagger_report=""
     if [ -f "$swagger_dir/swagger-coverage-report.html" ]; then
@@ -244,10 +229,10 @@ extract_swagger_metrics() {
     elif [ -f "/Users/alex.pshe/IdeaProjects/web-test-framework/reports/swagger-coverage-report.html" ]; then
         swagger_report="/Users/alex.pshe/IdeaProjects/web-test-framework/reports/swagger-coverage-report.html"
     fi
-    
+
     if [ -n "$swagger_report" ]; then
         echo "Found Swagger report: $swagger_report"
-        
+
         # Extract metrics from HTML using grep/sed
         # Extract operations coverage
         total_operations=$(grep -o 'All operations: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
@@ -255,40 +240,40 @@ extract_swagger_metrics() {
         if [ "$total_operations" -gt 0 ]; then
             covered_operations=$((total_operations - covered_operations))
         fi
-        
+
         # Extract tags coverage
         total_tags=$(grep -o 'All tags: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
         covered_tags=$(grep -o 'Tags without calls: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
         if [ "$total_tags" -gt 0 ]; then
             covered_tags=$((total_tags - covered_tags))
         fi
-        
+
         # Extract conditions coverage
         total_conditions=$(grep -o 'Total: [0-9]*' "$swagger_report" | grep -o '[0-9]*' | head -1 || echo "0")
-        
+
         # Extract coverage percentages
         full_coverage=$(grep -o 'Full coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         partial_coverage=$(grep -o 'Partial coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
         empty_coverage=$(grep -o 'Empty coverage: [0-9.]*%' "$swagger_report" | grep -o '[0-9.]*' | head -1 || echo "0")
-        
+
         # Calculate API coverage percentage
         local api_coverage=0
         if [ "$total_operations" -gt 0 ]; then
             api_coverage=$(echo "scale=1; $covered_operations * 100 / $total_operations" | bc -l 2>/dev/null || echo "0")
         fi
-        
+
         # Calculate conditions coverage percentage
         local conditions_coverage=0
         if [ "$total_conditions" -gt 0 ]; then
             conditions_coverage=$(echo "scale=1; $covered_conditions * 100 / $total_conditions" | bc -l 2>/dev/null || echo "0")
         fi
-        
+
         # If we have no covered conditions data, estimate based on API coverage
         if [ "$covered_conditions" = "0" ] && [ "$total_conditions" -gt 0 ]; then
             covered_conditions=$(echo "scale=0; $total_conditions * $api_coverage / 100" | bc -l 2>/dev/null || echo "0")
             conditions_coverage=$api_coverage
         fi
-        
+
         # Extract HTTP method coverage
         local method_coverage="{}"
         if command -v jq &> /dev/null; then
@@ -297,12 +282,12 @@ extract_swagger_metrics() {
                 method_coverage=$(jq '.methods // {}' "$swagger_dir/swagger-coverage.json" 2>/dev/null || echo "{}")
             fi
         fi
-        
+
         # If no method coverage data, create estimated data based on API coverage
         if [ "$method_coverage" = "{}" ] || [ "$method_coverage" = "null" ]; then
             method_coverage='{"GET": {"coverage": 85, "total": 200}, "POST": {"coverage": 70, "total": 150}, "PUT": {"coverage": 60, "total": 50}, "DELETE": {"coverage": 40, "total": 33}}'
         fi
-        
+
         # Extract status code coverage
         local status_coverage="{}"
         if [ -f "$swagger_dir/swagger-coverage.json" ]; then
@@ -310,12 +295,12 @@ extract_swagger_metrics() {
                 status_coverage=$(jq '.statusCodes // {}' "$swagger_dir/swagger-coverage.json" 2>/dev/null || echo "{}")
             fi
         fi
-        
+
         # If no status code coverage data, create estimated data
         if [ "$status_coverage" = "{}" ] || [ "$status_coverage" = "null" ]; then
             status_coverage='{"200": 15, "400": 8, "403": 5, "404": 3, "500": 2}'
         fi
-        
+
         # Update metrics file with Swagger data
         if [ -f "$metrics_file" ]; then
             # Read existing metrics and add Swagger data
@@ -357,7 +342,7 @@ extract_swagger_metrics() {
 }
 EOF
         fi
-        
+
         echo -e "${GREEN}✅ Swagger metrics extracted:${NC}"
         echo "  - Total operations: $total_operations"
         echo "  - Covered operations: $covered_operations"
@@ -370,7 +355,7 @@ EOF
         echo "  - Empty coverage: ${empty_coverage}%"
     else
         echo -e "${YELLOW}⚠️  No Swagger report found${NC}"
-        
+
         # Add empty Swagger metrics if no report found
         if [ -f "$metrics_file" ]; then
             local temp_file=$(mktemp)
@@ -399,23 +384,21 @@ generate_final_index() {
     local metrics_file="$2"
     local template_file=".github/report/index.html"
     local final_file="$output_dir/index.html"
-    
+
     echo -e "${YELLOW}📄 Generating final index.html...${NC}"
-    
+
     if [ ! -f "$template_file" ]; then
         echo -e "${RED}❌ Template file not found: $template_file${NC}"
         return 1
     fi
-    
+
     # Create a copy of the template
     cp "$template_file" "$final_file"
 
-    cat "$final_file"
-    
     # Extract metrics from JSON file for placeholder replacement
     if [ -f "$metrics_file" ] && command -v jq &> /dev/null; then
         echo "Replacing placeholders with actual metrics..."
-        
+
         # Extract Allure metrics
         local allure_pass_rate=$(jq -r '.allure.passRate // 0' "$metrics_file")
         local allure_total_tests=$(jq -r '.allure.totalTests // 0' "$metrics_file")
@@ -427,11 +410,11 @@ generate_final_index() {
         local allure_critical_failures=$(jq -r '.allure.criticalFailures // 0' "$metrics_file")
         local allure_avg_duration=$(jq -r '.allure.avgDuration // 0' "$metrics_file")
         local allure_total_duration=$(jq -r '.allure.totalDuration // 0' "$metrics_file")
-        
+
         # Format duration - convert to integers first
         local allure_avg_duration_int=$(echo "scale=0; $allure_avg_duration / 1" | bc -l 2>/dev/null || echo "0")
         local allure_total_duration_int=$(echo "scale=0; $allure_total_duration / 1" | bc -l 2>/dev/null || echo "0")
-        
+
         local allure_avg_duration_formatted=""
         if [ "$allure_avg_duration_int" -ge 3600 ]; then
             local hours=$((allure_avg_duration_int / 3600))
@@ -445,7 +428,7 @@ generate_final_index() {
         else
             allure_avg_duration_formatted="${allure_avg_duration_int}s"
         fi
-        
+
         local allure_total_duration_formatted=""
         if [ "$allure_total_duration_int" -ge 3600 ]; then
             local hours=$((allure_total_duration_int / 3600))
@@ -459,7 +442,7 @@ generate_final_index() {
         else
             allure_total_duration_formatted="${allure_total_duration_int}s"
         fi
-        
+
         # Extract Swagger metrics
         local swagger_api_coverage=$(jq -r '.swagger.apiCoverage // 0' "$metrics_file")
         local swagger_conditions_coverage=$(jq -r '.swagger.conditionsCoverage // 0' "$metrics_file")
@@ -470,7 +453,7 @@ generate_final_index() {
         local swagger_covered_operations=$(jq -r '.swagger.coveredOperations // 0' "$metrics_file")
         local swagger_total_tags=$(jq -r '.swagger.totalTags // 0' "$metrics_file")
         local swagger_covered_tags=$(jq -r '.swagger.coveredTags // 0' "$metrics_file")
-        
+
         # Calculate operations and tags coverage percentages
         local swagger_operations_coverage=0
         local swagger_tags_coverage=0
@@ -480,7 +463,7 @@ generate_final_index() {
         if [ "$swagger_total_tags" -gt 0 ]; then
             swagger_tags_coverage=$(echo "scale=1; $swagger_covered_tags * 100 / $swagger_total_tags" | bc -l 2>/dev/null || echo "0")
         fi
-        
+
         # Set environment variables for substitution
         export ALLURE_PASS_RATE="$allure_pass_rate"
         export ALLURE_TOTAL_TESTS="$allure_total_tests"
@@ -492,7 +475,7 @@ generate_final_index() {
         export ALLURE_CRITICAL_FAILURES="$allure_critical_failures"
         export ALLURE_AVG_DURATION="$allure_avg_duration_formatted"
         export ALLURE_TOTAL_DURATION="$allure_total_duration_formatted"
-        
+
         export SWAGGER_API_COVERAGE="$swagger_api_coverage"
         export SWAGGER_CONDITIONS_COVERAGE="$swagger_conditions_coverage"
         export SWAGGER_FULL_COVERAGE="$swagger_full_coverage"
@@ -504,7 +487,7 @@ generate_final_index() {
         export SWAGGER_TAGS_COVERAGE="$swagger_tags_coverage"
         export SWAGGER_COVERED_TAGS="$swagger_covered_tags"
         export SWAGGER_TOTAL_TAGS="$swagger_total_tags"
-        
+
         # Use envsubst to replace all placeholders at once
         if command -v envsubst &> /dev/null; then
             echo "Using envsubst for placeholder replacement..."
@@ -558,37 +541,37 @@ generate_final_index() {
                     print;
                 }' "$final_file" > "${final_file}.tmp" && mv "${final_file}.tmp" "$final_file"
         fi
-        
+
         echo "✅ Placeholders replaced with actual metrics"
     else
         echo "⚠️  No metrics file or jq not available, using template as-is"
     fi
-    
+
     echo -e "${GREEN}✅ Final index.html ready: $final_file${NC}"
 }
 
 # Main execution
 main() {
     echo -e "${BLUE}🚀 Starting metrics extraction...${NC}"
-    
+
     # Create output directory if it doesn't exist
     mkdir -p "$OUTPUT_DIR"
-    
+
     # Extract Allure metrics
     extract_allure_metrics "$ALLURE_RESULTS_DIR" "$METRICS_FILE"
-    
+
     # Extract Swagger metrics
     extract_swagger_metrics "$SWAGGER_REPORT_DIR" "$METRICS_FILE"
-    
+
     # Generate final index.html
     generate_final_index "$OUTPUT_DIR" "$METRICS_FILE"
-    
+
     # Copy metrics.json to output directory
     if [ -f "$METRICS_FILE" ]; then
         cp "$METRICS_FILE" "$OUTPUT_DIR/"
         echo "📁 Metrics file copied to: $OUTPUT_DIR/$METRICS_FILE"
     fi
-    
+
     # Display final metrics
     echo -e "${BLUE}📊 Final metrics summary:${NC}"
     if [ -f "$METRICS_FILE" ]; then
@@ -598,7 +581,7 @@ main() {
             cat "$METRICS_FILE"
         fi
     fi
-    
+
     echo -e "${GREEN}✅ Metrics extraction completed successfully!${NC}"
     echo "📁 Metrics file: $OUTPUT_DIR/$METRICS_FILE"
     echo "📄 Final report: $OUTPUT_DIR/index.html"
