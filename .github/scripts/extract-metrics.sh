@@ -491,10 +491,13 @@ generate_final_index() {
         # Use envsubst to replace all placeholders at once
         if command -v envsubst &> /dev/null; then
             echo "Using envsubst for placeholder replacement..."
-            envsubst < "$final_file" > "${final_file}.tmp" && sudo mv "${final_file}.tmp" "$final_file"
+            # Create temp file in a writable location, then move it
+            local temp_file=$(mktemp)
+            envsubst < "$final_file" > "$temp_file" && sudo mv "$temp_file" "$final_file"
         else
             echo "envsubst not available, using awk for placeholder replacement..."
             # Fallback to awk for more efficient replacement
+            local temp_file=$(mktemp)
             awk -v allure_pass_rate="$allure_pass_rate" \
                 -v allure_total_tests="$allure_total_tests" \
                 -v allure_passed_tests="$allure_passed_tests" \
@@ -539,7 +542,7 @@ generate_final_index() {
                     gsub(/\$SWAGGER_COVERED_TAGS/, swagger_covered_tags);
                     gsub(/\$SWAGGER_TOTAL_TAGS/, swagger_total_tags);
                     print;
-                }' "$final_file" > "${final_file}.tmp" && sudo mv "${final_file}.tmp" "$final_file"
+                }' "$final_file" > "$temp_file" && sudo mv "$temp_file" "$final_file"
         fi
 
         echo "✅ Placeholders replaced with actual metrics"
