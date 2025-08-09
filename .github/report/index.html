@@ -242,40 +242,40 @@
         <div class="kpi-grid">
             <div class="kpi-card" id="pass-rate-card">
                 <div class="kpi-label">Pass Rate</div>
-                <div class="kpi-value" id="pass-rate-value">{{ALLURE_PASS_RATE}}%</div>
+                <div class="kpi-value" id="pass-rate-value">$ALLURE_PASS_RATE%</div>
                 <div class="coverage-bar">
-                    <div class="coverage-fill" id="pass-rate-fill" style="width: {{ALLURE_PASS_RATE}}%"></div>
+                    <div class="coverage-fill" id="pass-rate-fill" style="width: $ALLURE_PASS_RATE%"></div>
                 </div>
             </div>
             
             <div class="kpi-card" id="total-tests-card">
                 <div class="kpi-label">Total Tests</div>
-                <div class="kpi-value" id="total-tests-value">{{ALLURE_TOTAL_TESTS}}</div>
+                <div class="kpi-value" id="total-tests-value">$ALLURE_TOTAL_TESTS</div>
                 <div class="metric-details">
-                    <span id="passed-tests">{{ALLURE_PASSED_TESTS}} passed</span>
-                    <span id="failed-tests">{{ALLURE_FAILED_TESTS}} failed</span>
+                    <span id="passed-tests">$ALLURE_PASSED_TESTS passed</span>
+                    <span id="failed-tests">$ALLURE_FAILED_TESTS failed</span>
                 </div>
             </div>
             
             <div class="kpi-card" id="avg-duration-card">
                 <div class="kpi-label">Average Duration</div>
-                <div class="kpi-value" id="avg-duration-value">{{ALLURE_AVG_DURATION}}</div>
+                <div class="kpi-value" id="avg-duration-value">$ALLURE_AVG_DURATION</div>
                 <div class="metric-details">
-                    <span>Total: <span id="total-duration">{{ALLURE_TOTAL_DURATION}}</span></span>
+                    <span>Total: <span id="total-duration">$ALLURE_TOTAL_DURATION</span></span>
                 </div>
             </div>
             
             <div class="kpi-card" id="critical-failures-card">
                 <div class="kpi-label">Critical Failures</div>
-                <div class="kpi-value" id="critical-failures-value">{{ALLURE_CRITICAL_FAILURES}}</div>
+                <div class="kpi-value" id="critical-failures-value">$ALLURE_CRITICAL_FAILURES</div>
                 <div class="metric-details">
-                    <span id="flaky-tests">{{ALLURE_FLAKY_TESTS}} flaky</span>
+                    <span id="flaky-tests">$ALLURE_FLAKY_TESTS flaky</span>
                 </div>
             </div>
             
             <div class="kpi-card" id="skipped-tests-card">
                 <div class="kpi-label">Skipped Tests</div>
-                <div class="kpi-value" id="skipped-tests">{{ALLURE_SKIPPED_TESTS}}</div>
+                <div class="kpi-value" id="skipped-tests">$ALLURE_SKIPPED_TESTS</div>
             </div>
             
         </div>
@@ -299,7 +299,7 @@
                 <div class="kpi-label">API Coverage</div>
                 <div class="gauge-container">
                     <div class="gauge" id="api-coverage-gauge">
-                        <div class="gauge-value" id="api-coverage-value">{{SWAGGER_API_COVERAGE}}%</div>
+                        <div class="gauge-value" id="api-coverage-value">$SWAGGER_API_COVERAGE%</div>
                     </div>
                 </div>
             </div>
@@ -308,7 +308,7 @@
                 <div class="kpi-label">Conditions Coverage</div>
                 <div class="gauge-container">
                     <div class="gauge" id="conditions-coverage-gauge">
-                        <div class="gauge-value" id="conditions-coverage-value">{{SWAGGER_CONDITIONS_COVERAGE}}%</div>
+                        <div class="gauge-value" id="conditions-coverage-value">$SWAGGER_CONDITIONS_COVERAGE%</div>
                     </div>
                 </div>
             </div>
@@ -317,7 +317,7 @@
                 <div class="kpi-label">Full Coverage</div>
                 <div class="gauge-container">
                     <div class="gauge" id="full-coverage-gauge">
-                        <div class="gauge-value" id="full-coverage-value">{{SWAGGER_FULL_COVERAGE}}%</div>
+                        <div class="gauge-value" id="full-coverage-value">$SWAGGER_FULL_COVERAGE%</div>
                     </div>
                 </div>
             </div>
@@ -326,7 +326,7 @@
                 <div class="kpi-label">Partial Coverage</div>
                 <div class="gauge-container">
                     <div class="gauge" id="partial-coverage-gauge">
-                        <div class="gauge-value" id="partial-coverage-value">{{SWAGGER_PARTIAL_COVERAGE}}%</div>
+                        <div class="gauge-value" id="partial-coverage-value">$SWAGGER_PARTIAL_COVERAGE%</div>
                     </div>
                 </div>
             </div>
@@ -335,7 +335,7 @@
                 <div class="kpi-label">Empty Coverage</div>
                 <div class="gauge-container">
                     <div class="gauge" id="empty-coverage-gauge">
-                        <div class="gauge-value" id="empty-coverage-value">{{SWAGGER_EMPTY_COVERAGE}}%</div>
+                        <div class="gauge-value" id="empty-coverage-value">$SWAGGER_EMPTY_COVERAGE%</div>
                     </div>
                 </div>
             </div>
@@ -345,25 +345,25 @@
         <div class="kpi-grid">
             <div class="kpi-card" id="operations-coverage-card">
                 <div class="kpi-label">Operations Coverage</div>
-                <div class="kpi-value" id="operations-coverage-value">{{SWAGGER_OPERATIONS_COVERAGE}}%</div>
+                <div class="kpi-value" id="operations-coverage-value">$SWAGGER_OPERATIONS_COVERAGE%</div>
                 <div class="coverage-bar">
-                    <div class="coverage-fill" id="operations-coverage-fill" style="width: {{SWAGGER_OPERATIONS_COVERAGE}}%"></div>
+                    <div class="coverage-fill" id="operations-coverage-fill" style="width: $SWAGGER_OPERATIONS_COVERAGE%"></div>
                 </div>
                 <div class="metric-details">
-                    <span>Covered: <span id="covered-operations">{{SWAGGER_COVERED_OPERATIONS}}</span></span>
-                    <span>Total: <span id="total-operations">{{SWAGGER_TOTAL_OPERATIONS}}</span></span>
+                    <span>Covered: <span id="covered-operations">$SWAGGER_COVERED_OPERATIONS</span></span>
+                    <span>Total: <span id="total-operations">$SWAGGER_TOTAL_OPERATIONS</span></span>
                 </div>
             </div>
             
             <div class="kpi-card" id="tags-coverage-card">
                 <div class="kpi-label">Tags Coverage</div>
-                <div class="kpi-value" id="tags-coverage-value">{{SWAGGER_TAGS_COVERAGE}}%</div>
+                <div class="kpi-value" id="tags-coverage-value">$SWAGGER_TAGS_COVERAGE%</div>
                 <div class="coverage-bar">
-                    <div class="coverage-fill" id="tags-coverage-fill" style="width: {{SWAGGER_TAGS_COVERAGE}}%"></div>
+                    <div class="coverage-fill" id="tags-coverage-fill" style="width: $SWAGGER_TAGS_COVERAGE%"></div>
                 </div>
                 <div class="metric-details">
-                    <span>Covered: <span id="covered-tags">{{SWAGGER_COVERED_TAGS}}</span></span>
-                    <span>Total: <span id="total-tags">{{SWAGGER_TOTAL_TAGS}}</span></span>
+                    <span>Covered: <span id="covered-tags">$SWAGGER_COVERED_TAGS</span></span>
+                    <span>Total: <span id="total-tags">$SWAGGER_TOTAL_TAGS</span></span>
                 </div>
             </div>
         </div>
