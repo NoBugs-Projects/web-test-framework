@@ -69,8 +69,8 @@ jobs:
           # Execute extract-metrics.sh script
           chmod +x .github/scripts/extract-metrics.sh
           .github/scripts/extract-metrics.sh allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}/ allure-history/${{ github.run_number }}
-          sudo cat allure-history/${{ github.run_number }}/metrics.json
           sudo cat allure-history/${{ github.run_number }}/index.html
+          sudo ls -R allure-history/${{ github.run_number }}/
           echo "Metrics extracted and dashboard generated"
 
       - name: Publish test report
